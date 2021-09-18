@@ -5,6 +5,7 @@ import Peer from "simple-peer";
 import "./room.css";
 import Video from "./Video";
 import Toggle from "./Toggle";
+import Chat from "./Chat";
 // import Chat from "./Chat";
 // import UserList from "./UserList";
 
