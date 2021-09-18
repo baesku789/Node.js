@@ -5,7 +5,9 @@ import Peer from "simple-peer";
 import "./room.css";
 import Video from "./Video";
 import Toggle from "./Toggle";
-import Chat from "./Chat";
+// import Chat from "./Chat";
+// import UserList from "./UserList";
+
 // setting the constraints of video box
 const videoConstraints = {
   height: window.innerHeight / 2,
@@ -24,22 +26,20 @@ const Room = ({ match, location }) => {
   console.log(username);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:8000", {
-      withCredentials: true,
-    });
-    console.log("socket connect??");
+    socketRef.current = io.connect("/");
 
-    const getUserMedia = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: videoConstraints,
-        });
-        console.log(`stream : ${typeof stream}`);
+    socketRef.current.emit("send userList", username);
+
+    // asking for audio and video access
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: videoConstraints })
+      .then((stream) => {
+        // streaming the audio and video
         userVideo.current.srcObject = stream;
         userStream.current = stream;
 
         socketRef.current.emit("join room group", roomID);
+        console.log("emit join room group");
 
         // getting all user for the new user joining in
         socketRef.current.on("all users", (users) => {
@@ -57,8 +57,8 @@ const Room = ({ match, location }) => {
               peerID: userID,
               peer,
             });
-            setPeers(peers);
           });
+          setPeers(peers);
         });
 
         // sending signal to existing users after new user joined
@@ -80,15 +80,15 @@ const Room = ({ match, location }) => {
 
         // exisisting users recieving the signal
         socketRef.current.on("receiving returned signal", (payload) => {
-          console.log(`on receiving returned signal ${payload}`);
+          console.log("on receiving returned signal");
           const item = peersRef.current.find((p) => p.peerID === payload.id);
           item.peer.signal(payload.signal);
         });
 
         // handling user disconnecting
         socketRef.current.on("user left", (id) => {
-          console.log(`on user left ${id}`);
           // finding the id of the peer who just left
+          console.log("on user left");
           const peerObj = peersRef.current.find((p) => p.peerID === id);
           if (peerObj) {
             peerObj.peer.destroy();
@@ -99,11 +99,7 @@ const Room = ({ match, location }) => {
           peersRef.current = peers;
           setPeers(peers);
         });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserMedia();
+      });
   }, []);
 
   // creating a peer object for newly joined user
@@ -115,12 +111,12 @@ const Room = ({ match, location }) => {
     });
 
     peer.on("signal", (signal) => {
+      console.log("create peer on signal");
       socketRef.current.emit("sending signal", {
         userToSignal,
         callerID,
         signal,
       });
-      console.log(`on sending signal ${signal}`);
     });
 
     return peer;
@@ -135,8 +131,8 @@ const Room = ({ match, location }) => {
     });
 
     peer.on("signal", (signal) => {
+      console.log("add peer on signal");
       socketRef.current.emit("returning signal", { signal, callerID });
-      console.log(`on returning signal ${signal}`);
     });
 
     peer.signal(incomingSignal);
@@ -172,9 +168,7 @@ const Room = ({ match, location }) => {
         </div>
         <Toggle userStream={userStream} url={location.pathname} />
       </div>
-      <div className="side">
-        <Chat socketRef={socketRef} />
-      </div>
+      <div className="side"></div>
     </div>
   );
 };

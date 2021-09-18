@@ -8,6 +8,7 @@
 
 .side {
   display: flex;
+  width: 30%;
   flex-direction: column;
 }
 
@@ -17,33 +18,24 @@
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  display: block;
+  display: flex;
   margin-top: 2rem;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap");
 
-.box {
-  justify-content: center;
-  align-items: center;
-  margin-top: 6%;
+#videos {
+  background-color: gray;
+  width: 70%;
 }
 
-#video-box {
-  display: inline-flex;
-  align-items: center;
-}
-
-#button-box {
-  margin-top: 4rem;
-}
 #av {
   color: #f6f6f6;
   background-color: #302b70;
   border: none;
   font-size: large;
   padding: 1rem;
-  border-radius: 100%;
+  border-radius: 5px;
   margin-right: 1rem;
 }
 #av:hover {
@@ -57,13 +49,22 @@
   border: none;
   font-size: large;
   padding: 1rem;
-  border-radius: 100%;
+  border-radius: 5px;
   margin-right: 1rem;
 }
 #avv:hover {
   color: #f6f6f6;
   background-color: #787cd1;
   border: none;
+}
+#url {
+  color: #f6f6f6;
+  background-color: #302b70;
+  border: none;
+  font-size: large;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-right: 1rem;
 }
 #cp {
   color: #f6f6f6;
@@ -112,7 +113,8 @@
   background-color: #5ec9cc;
   border: none;
   padding: 1rem;
-  border-radius: 100%;
+  font-size: large;
+  border-radius: 5px;
   margin-right: 1rem;
 }
 #end:hover {

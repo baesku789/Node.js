@@ -42,7 +42,7 @@ const ChatBox = (props) => {
 const Chat = (props) => {
   const [chatArr, setChatArr] = useState([]);
   const [chat, setChat] = useState({ name: props.username, message: "" });
-  const socket = io.connect("http://localhost:8000");
+  const socket = io.connect("/");
 
   useEffect(() => {
     socket.on("receive message", (message) => {

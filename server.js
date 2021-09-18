@@ -3,22 +3,14 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const socket = require("socket.io");
-const io = socket(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-const cors = require("cors");
-
-app.use(cors());
+const io = socket(server);
 
 /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
 
 // room object to store the created room IDs
 const users = {};
 const socketToRoom = {};
+const userList = [];
 
 // when the user is forming a connection with socket.io
 io.on("connection", (socket) => {
@@ -38,6 +30,13 @@ io.on("connection", (socket) => {
     const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
     socket.emit("all users", usersInThisRoom);
     console.log(`emit all users ${usersInThisRoom}`);
+  });
+
+  socket.on("send userList", (username) => {
+    console.log(`send userList ${username}`);
+    userList.push(username);
+    io.emit("receive users", userList);
+    console.log(`userList ${userList}`);
   });
 
   socket.on("send message", (item) => {

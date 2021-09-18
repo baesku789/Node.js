@@ -21,12 +21,15 @@ const Toggle = (props) => {
     const [copied, setCopied] = useState(false);
 
     return (
-      <div>
+      <>
         <CopyToClipboard text={props.url} onCopy={() => setCopied(true)}>
-          <button>url 복사</button>
+          <button className="url">
+            {" "}
+            <i class="far fa-copy"></i>
+          </button>
         </CopyToClipboard>
         {copied ? alert("URL이 복사되었습니다.") : null}
-      </div>
+      </>
     );
   }
 
