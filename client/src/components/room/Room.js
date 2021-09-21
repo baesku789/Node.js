@@ -26,9 +26,17 @@ const Room = ({ match, location }) => {
   console.log(username);
 
   useEffect(() => {
-    socketRef.current = io.connect("/");
+    socketRef.current = io.connect("/", {
+      secure: true,
+      reconnection: true,
+      rejectUnauthorized: false,
+    });
 
-    socketRef.current.emit("send userList", username);
+    socketRef.current.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+
+    // socketRef.current.emit("send userList", username);
 
     // asking for audio and video access
     navigator.mediaDevices
@@ -37,7 +45,7 @@ const Room = ({ match, location }) => {
         // streaming the audio and video
         userVideo.current.srcObject = stream;
         userStream.current = stream;
-
+        console.log("test : " + roomID);
         socketRef.current.emit("join room group", roomID);
         console.log("emit join room group");
 

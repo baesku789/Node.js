@@ -1,26 +1,27 @@
-var express = require("express"); 	
+var express = require("express");
 const http = require("http");
 var app = express();
 const server = http.createServer(app);
-const socket = require("socket.io")
+const socket = require("socket.io");
 const io = socket(server);
-const port = 8000
 const cors = require("cors");
-var bodyparser = require('body-parser');
 
-var mysql= require("./routes/mysql");
+const port = 8000;
+var bodyparser = require("body-parser");
+
+var mysql = require("./routes/mysql");
 
 app.use(cors());
 app.use(bodyparser.json());
-app.use(express.urlencoded({ extended : true  }));
+app.use(express.urlencoded({ extended: true }));
 mysql.connect();
-app.use(express.static(__dirname+ "./routes"));
+app.use(express.static(__dirname + "./routes"));
 
 var home = require("./routes/home");
 var signup = require("./routes/signup");
 
-app.use('/',home); // 홈(로그인)
-app.use('/signup',signup); // 회원가입
+app.use("/", home); // 홈(로그인)
+app.use("/signup", signup); // 회원가입
 
 /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
 
@@ -29,7 +30,7 @@ const users = {};
 const socketToRoom = {};
 const userList = [];
 
-console.log("start")
+console.log("start");
 
 // when the user is forming a connection with socket.io
 io.on("connection", (socket) => {
@@ -112,5 +113,5 @@ io.on("connection", (socket) => {
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+});
